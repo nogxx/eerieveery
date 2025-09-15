@@ -3,10 +3,774 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Game Studio</title>
+    <title>Eerie Veery - Indie Game Studio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Colors from palette - left to right */
+            --navy: #1e3a5f;
+            --periwinkle: #6b7fd7;
+            --teal: #4a7c7e;
+            --cyan: #66c3cc;
+            --powder-blue: #bfdfdf;
+            --cream: #f5e6d3;
+            --peach: #f9c784;
+            --coral: #ff6b6b;
+            --rose: #ee5a6f;
+            --crimson: #c1374a;
+            
+            /* Semantic colors */
+            --bg-dark: #0a0e1a;
+            --bg-darker: #060810;
+            --text-light: #f5e6d3;
+            --text-dim: #bfdfdf;
+            --accent-1: #ff6b6b;
+            --accent-2: #66c3cc;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-darker) 100%);
+            color: var(--text-light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Mystical background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--coral);
+            border-radius: 50%;
+            opacity: 0;
+            animation: float 20s infinite;
+            box-shadow: 0 0 10px var(--coral);
+        }
+
+        .particle:nth-child(even) {
+            background: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                opacity: 0;
+                transform: translateY(100vh) translateX(0);
+            }
+            10%, 90% {
+                opacity: 0.8;
+            }
+            50% {
+                transform: translateY(-50vh) translateX(100px);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: rgba(6, 8, 16, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        nav.scrolled {
+            padding: 15px 50px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--coral), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--coral), var(--cyan));
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--coral);
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 3;
+        }
+
+        .hero h1 {
+            font-size: 80px;
+            margin-bottom: 20px;
+            font-weight: 300;
+            letter-spacing: 10px;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(255, 107, 107, 0.5),
+                             0 0 40px rgba(102, 195, 204, 0.3);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(255, 107, 107, 0.7),
+                             0 0 60px rgba(102, 195, 204, 0.5);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease 0.5s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(45deg, var(--coral), var(--cyan));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease 1s both;
+            box-shadow: 0 5px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.5);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 100px 50px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-title {
+            font-size: 48px;
+            margin-bottom: 50px;
+            text-align: center;
+            background: linear-gradient(45deg, var(--coral), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Games Section */
+        .game-showcase {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .game-title {
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: var(--coral);
+        }
+
+        .game-status {
+            display: inline-block;
+            padding: 5px 15px;
+            background: rgba(102, 195, 204, 0.2);
+            border: 1px solid var(--cyan);
+            border-radius: 20px;
+            color: var(--cyan);
+            margin-bottom: 30px;
+        }
+
+        .game-description {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-dim);
+            margin-bottom: 40px;
+        }
+
+        .media-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .gif-placeholder {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(102, 195, 204, 0.1));
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .gif-placeholder:hover {
+            border-color: var(--coral);
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(102, 195, 204, 0.2));
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .screenshot-placeholder {
+            background: linear-gradient(135deg, rgba(102, 195, 204, 0.1), rgba(255, 107, 107, 0.1));
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .screenshot-placeholder:hover {
+            border-color: var(--cyan);
+            background: linear-gradient(135deg, rgba(102, 195, 204, 0.2), rgba(255, 107, 107, 0.2));
+        }
+
+        .platform-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 25px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .platform-link:hover {
+            background: rgba(255, 107, 107, 0.2);
+            border-color: var(--coral);
+            transform: translateX(5px);
+        }
+
+        /* About Section */
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .about-text {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--text-dim);
+        }
+
+        .about-image {
+            position: relative;
+        }
+
+        .about-visual {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(102, 195, 204, 0.1));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-visual::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 107, 0.1), transparent);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .team-member {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+            border-color: var(--coral);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.2);
+        }
+
+        .member-avatar {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--coral), var(--cyan));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+
+        .member-name {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .member-role {
+            color: var(--text-dim);
+        }
+
+        /* Contact Section */
+        .contact-content {
+            text-align: center;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .contact-item {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--cyan);
+        }
+
+        .contact-icon {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: linear-gradient(45deg, var(--coral), var(--cyan));
+            border-color: transparent;
+            transform: translateY(-3px) rotate(360deg);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-dim);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 48px;
+                letter-spacing: 5px;
+            }
+
+            .hero-subtitle {
+                font-size: 18px;
+            }
+
+            nav {
+                padding: 15px 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                font-size: 14px;
+            }
+
+            section {
+                padding: 60px 20px;
+            }
+
+            .section-title {
+                font-size: 36px;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .media-container {
+                grid-template-columns: 1fr;
+            }
+
+            .screenshots-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Loading animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s ease forwards;
+        }
+    </style>
 </head>
 <body>
-    <h1>Coming Soon</h1>
-    <p>Our game studio website is under construction.</p>
+    <!-- Mystical floating particles -->
+    <div class="particles">
+        <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+        <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+        <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+        <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+        <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+        <div class="particle" style="left: 70%; animation-delay: 2.5s;"></div>
+        <div class="particle" style="left: 80%; animation-delay: 1.5s;"></div>
+        <div class="particle" style="left: 90%; animation-delay: 3.5s;"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <div class="logo">EERIE VEERY</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#games">Games</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#team">Team</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="#press">Press Kit</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>EERIE VEERY</h1>
+            <p class="hero-subtitle">Crafting mysteriously playful experiences</p>
+            <a href="#games" class="cta-button">Explore Our Games</a>
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section id="games">
+        <h2 class="section-title">OUR GAMES</h2>
+        <div class="game-showcase">
+            <h3 class="game-title">Purranoia</h3>
+            <span class="game-status">Available Now!</span>
+            <p class="game-description">
+                Purranoia is an action roguelike with a twist to the genre - you have no control over 
+                your character's movement. Instead you control a variety of powerful scientific inventions 
+                to protect poor cat Mousti from waves of enemies. Master the chaos, upgrade your arsenal, 
+                and keep Mousti safe in this innovative take on the roguelike formula.
+            </p>
+            
+            <div class="media-container">
+                <div class="gif-placeholder">
+                    [Add Game GIF Here]
+                </div>
+                <div class="screenshots-grid">
+                    <div class="screenshot-placeholder">[Screenshot 1]</div>
+                    <div class="screenshot-placeholder">[Screenshot 2]</div>
+                    <div class="screenshot-placeholder">[Screenshot 3]</div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <a href="https://nogxx.itch.io/purranoia" class="platform-link" target="_blank">
+                    <span>🎮</span> Play on itch.io
+                </a>
+                <a href="#" class="platform-link">
+                    <span>🎮</span> Coming to Steam
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <h2 class="section-title">ABOUT US</h2>
+        <div class="about-content">
+            <div class="about-text">
+                <p>
+                    Eerie Veery is an independent game studio dedicated to creating unique, 
+                    atmospheric experiences that blend mystery with playful innovation. Founded 
+                    by passionate developers who believe in the power of indie games to tell 
+                    unconventional stories and push creative boundaries.
+                </p>
+                <br>
+                <p>
+                    We specialize in crafting games that leave players with a sense of wonder 
+                    and discovery. Our approach combines hand-crafted art, compelling gameplay 
+                    mechanics, and that special indie magic that makes each playthrough memorable.
+                </p>
+            </div>
+            <div class="about-image">
+                <div class="about-visual">
+                    [Studio Image/Logo]
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team">
+        <h2 class="section-title">THE FLOCK</h2>
+        <div class="team-grid">
+            <div class="team-member">
+                <div class="member-avatar">👤</div>
+                <h3 class="member-name">[Your Name]</h3>
+                <p class="member-role">Game Developer / Designer</p>
+            </div>
+            <div class="team-member">
+                <div class="member-avatar">🎨</div>
+                <h3 class="member-name">[Artist Name]</h3>
+                <p class="member-role">Art Director</p>
+            </div>
+            <div class="team-member">
+                <div class="member-avatar">🎵</div>
+                <h3 class="member-name">[Composer Name]</h3>
+                <p class="member-role">Sound Designer</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <h2 class="section-title">GET IN TOUCH</h2>
+        <div class="contact-content">
+            <p style="color: var(--text-dim); font-size: 18px; margin-bottom: 30px;">
+                Have questions? Want to collaborate? Just want to say hi? We'd love to hear from you!
+            </p>
+            
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <div class="contact-icon">✉️</div>
+                    <h3>Email</h3>
+                    <p style="color: var(--text-dim);">contact@eerieveery.com</p>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">🕹️</div>
+                    <h3>Discord</h3>
+                    <p style="color: var(--text-dim);">Coming Soon</p>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">📰</div>
+                    <h3>Press</h3>
+                    <p style="color: var(--text-dim);">press@eerieveery.com</p>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="#" class="social-link" title="Twitter">𝕏</a>
+                <a href="#" class="social-link" title="Steam">🎮</a>
+                <a href="#" class="social-link" title="YouTube">▶️</a>
+                <a href="#" class="social-link" title="Discord">💬</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Press Kit Section -->
+    <section id="press">
+        <h2 class="section-title">PRESS KIT</h2>
+        <div style="text-align: center;">
+            <p style="color: var(--text-dim); font-size: 18px; margin-bottom: 30px;">
+                Members of the press can download our press kit for logos, screenshots, and additional information.
+            </p>
+            <a href="#" class="cta-button">Download Press Kit</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Eerie Veery. All rights reserved.</p>
+        <p style="margin-top: 10px; font-size: 14px;">Made with 🎮 and a touch of mystery</p>
+    </footer>
+
+    <script>
+        // Add scroll effect to navigation
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scroll for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add intersection observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 1s ease forwards';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all sections
+        document.querySelectorAll('section').forEach(section => {
+            if (!section.classList.contains('hero')) {
+                section.style.opacity = '0';
+                observer.observe(section);
+            }
+        });
+    </script>
 </body>
 </html>
